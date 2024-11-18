@@ -1,0 +1,15 @@
+# compilacion con mvn  
+## ejecutar Apliacion
+$ ./mvnw spring-boot:run                 #dev1
+
+
+# compilacion con mvn  
+## va generar: target (ejecutable)
+$ ./mvnw clean package -DskipTests  #dev1
+$ mvn clean install                 #dev2
+
+
+jshell> var saludo="hola java"
+saludo ==> "hola java"
+
+control+ d (salir)

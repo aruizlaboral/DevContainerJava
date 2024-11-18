@@ -1,0 +1,61 @@
+version: "3.9"
+####JAVA
+services:
+  java_app:
+    container_name: java
+    image: pee-java_app:1.0.0
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=jdbc:postgresql://java_db:5432/postgres
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+    volumes:
+      - ./app-java:/app-java
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+####POSTGRES
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      #- ./postgres_data:/var/lib/postgressql/data
+      - postgres_data:/var/lib/postgresql/data
+      #- ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+
+####POSTGRES- CLIENTE PGADMIN
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com    # Usuario de pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: admin           # Contraseña de pgAdmin
+    ports:
+      - "8080:80"  # Exponer pgAdmin en el puerto 8080 de tu máquina local
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin           # Persistencia de configuración de pgAdmin
+    restart: unless-stopped
+    depends_on:
+      - postgres   # Asegurar que PostgreSQL se inicie antes de pgAdmin
+
+####Volumenes
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+    
+##Networks
+networks:
+  myred:
+    driver: bridge

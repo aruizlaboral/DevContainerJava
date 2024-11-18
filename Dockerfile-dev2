@@ -1,0 +1,16 @@
+# fuente consulta: https://www.youtube.com/watch?v=uqBZEL9m2V4
+#sin codigo fuente
+
+FROM openjdk:17-jdk-alpine
+
+VOLUME /tmp
+
+ENV IMG_PATH=/IMG_PATH
+
+EXPOSE 8080
+
+RUN mkdir -p /img
+
+COPY target/dockerized.postgresql-0.0.1-SNAPSHOT.jar java-app.jar
+
+ENTRYPOINT ["java", "-jar", "java-app.jar"]
